@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pencarian Nilai - SMK Telekomunikasi Tunas Harapan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="data-siswa.js" defer></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url("bg.jpeg.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      z-index: -1;
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 30px 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      height: 100px;
+      width: auto;
+      filter: brightness(1.1) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+    }
+
+    .judul-header h1,
+    .judul-header h3 {
+      margin: 0;
+      text-align: left;
+    }
+
+    section {
+      background-color: rgba(255, 255, 255, 0.95);
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .radio-item {
+      flex: 1 1 45%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .radio-item input[type="radio"] {
+      accent-color: #007bff;
+      cursor: pointer;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 14px;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #hasil p {
+      color: red;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 25px;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f4f8fb;
+    }
+
+    tbody tr:hover {
+      background-color: #eaf3fc;
+      transition: background-color 0.3s ease;
+    }
+
+    #hasil {
+      margin-top: 20px;
+    }
+
+    #btnCetak {
+      display: none;
+      margin-top: 15px;
+      background-color: #28a745;
+    }
+
+    #btnCetak:hover {
+      background-color: #218838;
+    }
+
+
+    @media (max-width: 600px) {
+      .radio-item {
+        flex: 1 1 100%;
+      }
+
+      section {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .header-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .judul-header h1,
+      .judul-header h3 {
+        text-align: center;
+      }
+    }
+
+    @media print {
+      body {
+        background: none !important;
+      }
+
+      header,
+      .form-group,
+      .checkbox-group,
+      button,
+      .radio-group {
+        display: none !important;
+      }
+
+      #hasil {
+        margin-top: 0;
+        font-size: 12pt;
+        color: #000;
+      }
+
+      table {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        width: 100% !important;
+      }
+
+      h3 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      th {
+        background-color: #000 !important;
+        color: white !important;
+      }
+    }
+
+    #hasil h3 {
+      font-size: 16pt;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nilai Ujian - SMK Tunas Harapan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <img src="logo-sekolah-removebg-preview.png" class="logo" alt="Logo Sekolah" />
+      <div class="judul-header">
+        <h1>SMK Telekomunikasi Tunas Harapan</h1>
+        <h3>Sistem Cek Nilai Ujian - Angkatan 2025</h3>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Masukkan Identitas Anda</h2>
+
+    <div class="form-group">
+      <label for="nama"><i class="fas fa-user"></i> Nama:</label>
+      <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" />
+    </div>
+
+    <div class="form-group">
+      <label for="kelas"><i class="fas fa-chalkboard"></i> Kelas:</label>
+      <input type="text" id="kelas" placeholder="Contoh: X-A" />
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-graduation-cap"></i> Pilih Jurusan:</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="jurusan" value="PPLG" /> PPLG</label>
+        <label class="radio-item"><input type="radio" name="jurusan" value="TJKT" /> TJKT</label>
+        <label class="radio-item"><input type="radio" name="jurusan" value="DKV" /> DKV</label>
+        <label class="radio-item"><input type="radio" name="jurusan" value="TKR" /> TKR</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nisn"><i class="fas fa-id-card"></i> NISN:</label>
+      <input type="text" id="nisn" />
+    </div>
+
+    <div class="form-group">
+      <label for="password"><i class="fas fa-lock"></i> Password:</label>
+      <input type="password" id="password" />
+    </div>
+
+    <div class="form-group checkbox-group">
+      <input type="checkbox" id="konfirmasi" />
+      <label for="konfirmasi">Saya telah mengisi data dengan benar</label>
+    </div>
+
+    <button onclick="cekNilai()">Lihat Nilai</button>
+
+    <div id="hasil" style="margin-top: 30px;"></div>
+    <button id="btnCetak" onclick="generatePDF()" style="display:none; margin-top: 15px;">Cetak Nilai ke PDF</button>
+  </section>
+
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>
